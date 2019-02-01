@@ -1,0 +1,57 @@
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font: 400 15px/1.8 "Lato", sans-serif;
+    color: white;
+}
+
+body {
+    background: url("../img/pic2.jpg") no-repeat;
+    background-size: cover;
+    font-family: "Helvetica Neue",sans-serif;
+    font-weight: bold;
+
+}
+/*.content {*/
+    /*width: 94%;*/
+    /*margin: 4em auto;*/
+    /*font-size: 20px;*/
+    /*line-height: 100px;*/
+    /*text-align: left;*/
+/*}*/
+
+
+.remarkToCustomer {
+    background: #fb2525;
+    border-style: ridge;
+    background-opacity: 0.65;
+    position: fixed;
+    font-family: "Kristen ITC", serif;
+    width: 40%;
+    margin: 8em auto;
+    margin-left: 5%;
+    font-size: 20px;
+    text-align: center;
+}
+
+.hallpic {
+    height: 100%;
+    float:right;
+    margin-top: 10%;
+    top: 50%;
+    margin-right: 15%;
+    width:33%;
+}
+
+.phonelink{
+    /*position: fixed; !* Lock location always on the scree *!*/
+    bottom: 0; /* Set to the bottom */
+    right: 0; /* Set to the right */
+    left: 0;
+    margin: 30%; /* Add space around background */
+}
+.phoneicon{
+    width: 40px; /* Set width of icon */
+    height: 40px; /* Set height of icon */
+}

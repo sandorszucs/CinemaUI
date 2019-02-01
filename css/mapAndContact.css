@@ -1,0 +1,65 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font: 400 15px/1.8 "Lato", sans-serif;
+    color: #777;
+}
+
+body {
+    background: url("../img/pic8.jpg") no-repeat;
+    background-size: cover;
+    font-family: "Helvetica Neue",sans-serif;
+    font-weight: bold;
+
+}
+.content {
+    width: 94%;
+    margin: 4em auto;
+    font-size: 20px;
+    /*line-height: 30px;*/
+    text-align: justify;
+}
+.signup {
+    font-family: "Kristen ITC", serif;
+    width: 80%;
+    margin: 4em auto;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.hallpic {
+    /*height: 100%;*/
+    float:left;
+    margin-top: 10%;
+    /*top: 50%;*/
+    margin-left: 15%;
+    width:30%;
+    height: 40vh;
+
+}
+
+.map {
+    margin-top: 10%;
+    margin-left: 5%;
+}
+
+.top-left {
+    font-family: Rockwell;
+    position: absolute;
+    margin-top:10%;
+    left: 18%;
+}
+
+.container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.address {
+    text-align: left;
+    font-family: "Berlin Sans FB Demi",sans-serif;
+    font-size: x-large;
+}
