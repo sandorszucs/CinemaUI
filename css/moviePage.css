@@ -5,3 +5,78 @@ body {
     font-weight: bold;
 
 }
+
+.plotOfTheMovie {
+    align-items: left;
+    font-family: "Berlin Sans FB Demi", cursive;
+    font-size: larger;
+    color: white;
+    margin-top: -35%;
+    width: 52%;
+    margin-left: 5%;
+}
+
+ion-icon {
+    font-size: 32px;
+}
+
+.listOfMovieInfoMain {
+    font-family: "Berlin Sans FB Demi", cursive;
+    font-size: larger;
+    color: white;
+    margin-top: 2%;
+    width: 52%;
+    margin-left: 5%;
+}
+
+.listOfMovieInfoSecond {
+    font-family: "Berlin Sans FB Demi", cursive;
+    font-size: larger;
+    color: white;
+    margin-top: 0%;
+    width: 52%;
+    margin-left: 15%;
+}
+
+.titleOfMovie {
+    font-size: xx-large;
+    margin-top: 5%;
+    margin-left: 15%;
+    text-align: center;
+    font-family: "Kristen ITC", sans-serif;
+    color: white;
+}
+.content {
+    width: 34%;
+    margin: 4em auto;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: justify;
+}
+
+.trailer {
+    width: 100%;
+    height: 40%;
+    margin-left: 10%;
+    margin-top: 8%;
+}
+
+.poster {
+    width: 70%;
+    height: 70%;
+    margin-left: 20%;
+    margin-top: 35%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 33.33%;
+    padding: 5px;
+}
