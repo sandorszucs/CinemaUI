@@ -17,7 +17,6 @@ body {
     width: 94%;
     margin: 4em auto;
     font-size: 20px;
-    /*line-height: 30px;*/
     text-align: justify;
 }
 .signup {
@@ -30,14 +29,11 @@ body {
 }
 
 .hallpic {
-    /*height: 100%;*/
     float:left;
     margin-top: 10%;
-    /*top: 50%;*/
     margin-left: 15%;
     width:30%;
-    height: 40vh;
-
+    height: 60vh;
 }
 
 .map {

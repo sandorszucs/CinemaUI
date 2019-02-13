@@ -6,7 +6,6 @@ html, body {
 
 body {
     font-family: "Helvetica Neue",sans-serif;
-    /*font-weight: lighter;*/
     font-weight: bold;
 }
 
@@ -24,3 +23,116 @@ header {
     line-height: 30px;
     text-align: justify;
 }
+
+.dashed{
+    border-bottom-style:dashed;
+    border-bottom-color:#ccc}
+
+table{
+    border:1px solid #009DDB;
+    margin:0 0 30px 0}
+
+table thead th{
+    background:#009DDB;
+    color:white;
+    font-weight:bold;
+    padding:10px 30px;
+    text-transform:uppercase}
+
+table tbody>tr:nth-of-type(odd){
+    background-color:white
+}
+
+table tbody>tr:nth-of-type(even){
+    background-color:#ededed}
+
+table tbody td{
+    padding:10px 30px}
+
+table.full-width{
+    width:100%
+}
+
+table.no-head thead{
+    display:none
+}
+
+table.plain{
+    border:none
+}
+
+table.plain thead{
+    background:white;
+    color:#000
+}
+
+table.plain tbody>tr:nth-of-type(odd),
+table.plain tbody>tr:nth-of-type(even){background-color:white}
+
+table.plain tbody>tr{
+    border-bottom:1px dashed #ccc}
+
+table.plain tbody>tr td:first-of-type{
+    padding-left:15px
+}
+
+table.plain tbody>tr td:last-of-type{
+    padding-right:15px
+}
+
+@media (max-width: 480px)
+
+{table thead th{
+    font-size:0.6875rem;
+    font-weight:normal;
+    padding:5px 8px
+}
+
+    table tbody td{
+        padding:5px 8px}}
+
+.responsive-table{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    -ms-overflow-style:-ms-autohiding-scrollbar;
+    width:100%}
+
+code,pre{
+    background-color:#f7f7f7;
+    border:1px solid #e1e1e1;
+    border-radius:2px;
+    color:#d14;
+    font-size:0.9em;
+    padding:2px 4px
+}
+
+pre{margin:0 0 30px 0}
+
+.message:not(span){
+    background-color:#ccebf8;
+    border:1px solid #009DDB;
+    color:#009DDB;
+    display:block;
+    margin:0 0 30px 0;
+    padding:15px}
+
+@media (max-width: 768px)
+
+{.message:not(span){
+    padding:10px}
+}
+
+.message:not(span)>:last-child{
+    margin-bottom:0}
+
+.message:not(span) a:not(.action):not(.help){
+    color:#009DDB}.message:not(span) a
+                  .help{
+                      margin-left:5px;
+                      vertical-align:middle}
+
+.message:not(span).success{background-color:#cceee9;
+    border:1px solid #00a98f;
+    color:#009079}
+
+.message:not(span).success a:not(.action):not(.help){color:#009079}.message:not(span)
