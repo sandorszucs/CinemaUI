@@ -16,7 +16,7 @@ body {
 .content {
     width: 94%;
     margin: 4em auto;
-    font-size: 20px;
+    font-size: 80px;
     text-align: justify;
 }
 .signup {
@@ -37,25 +37,17 @@ body {
 }
 
 .map {
-    margin-top: 10%;
-    margin-left: 5%;
+    margin-left: 55%;
 }
 
 .top-left {
-    font-family: Rockwell;
-    position: absolute;
-    margin-top:10%;
-    left: 18%;
+    font-family: "Helvetica", sans-serif;
+    margin-top:5%;
+    float: left;
 }
 
 .container {
     position: relative;
     text-align: center;
     color: white;
-}
-
-.address {
-    text-align: left;
-    font-family: "Berlin Sans FB Demi",sans-serif;
-    font-size: x-large;
 }
