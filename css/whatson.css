@@ -17,11 +17,11 @@ header {
 }
 
 .content {
-    width: 94%;
+    color: #f7f7f7;
     margin: 4em auto;
-    font-size: 20px;
-    line-height: 30px;
-    text-align: justify;
+    font-size: 40px;
+    line-height: 5px;
+    text-align: center;
 }
 
 .dashed{
