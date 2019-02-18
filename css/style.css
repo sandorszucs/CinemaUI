@@ -19,6 +19,15 @@ body{
     transform: translate(-50%, -50%);
 }
 
+.tryAgain {
+    font-family: "Comic Sans MS", sans-serif;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .animation {
     -webkit-animation: fadeIn 0.5s ease-in;
     animation: fadeIn 0.5s ease-in;
