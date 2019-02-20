@@ -4,7 +4,7 @@ var API_URL = {
 
 var window=new XMLHttpRequest();
 
-window.Eye = {
+window.CinemaApplication = {
     add: function(person) {
         $.ajax({
             url: API_URL.USER,
@@ -35,11 +35,11 @@ window.Eye = {
             };
             console.log('submitting data');
             console.log(person);
-            Eye.add(person);
+            CinemaApplication.add(person);
             return false;
         });
     }
 };
 
 console.info('loading user');
-Eye.bindEvents();
+CinemaApplication.bindEvents();
