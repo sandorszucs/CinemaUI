@@ -2,7 +2,7 @@ var API_URL = {
     READ: 'http://localhost:8010/user'
 };
 
-window.Eye = {
+window.CinemaApplication = {
     load: function (person) {
         $.ajax({
             url: API_URL.READ,
@@ -29,7 +29,7 @@ window.Eye = {
     },
 
     bindEvents: function() {
-        $( ".box" ).submit(function() {
+        $( ".loginbox" ).submit(function() {
             const person = {
                 firstName: $('input[name=firstName]').val(),
                 lastName: $('input[name=lastName]').val(),
@@ -37,11 +37,11 @@ window.Eye = {
                 telephoneNumber: $('input[name=telephoneNumber]').val(),
                 email: $('input[name=email]').val(),
             };
-            Eye.load(person);
+            CinemaApplication.load(person);
             return false;
         });
     }
 };
 
 console.info('loading if user is correct');
-Eye.bindEvents();
+CinemaApplication.bindEvents();
