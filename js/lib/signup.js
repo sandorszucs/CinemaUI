@@ -6,7 +6,7 @@ var window=new XMLHttpRequest();
 
 window.CinemaApplication = {
     add: function(person) {
-        alert(person);
+        //alert(person);
         $.ajax({
             url: API_URL.USER,
             headers: {
@@ -15,15 +15,15 @@ window.CinemaApplication = {
             method: "POST",
             data: JSON.stringify(person, null, 5)
         }).done(function (response, data) {
-            alert("done");
+            //alert("done");
             console.info('Congratulations! Now you can login'+JSON.stringify(data));
             console.info(response);
-            window.location.href="../../html/login.html";
+            window.location.href="../html/login.html";
         }).fail(function (response) {
             alert("error");
             console.info('Oups! We got a problem');
             console.info(response);
-            window.location.href="../../html/mailTaken.html";
+            window.location.href="../html/mailTaken.html";
         });
     },
 

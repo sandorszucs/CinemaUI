@@ -1,26 +1,21 @@
 var API_URL = {
-    READ: 'http://localhost:8010/user'
+    READ: 'http://localhost:8010/login'
 };
 
 window.CinemaApplication = {
     load: function (person) {
+        console.log('person', person);
         $.ajax({
             url: API_URL.READ,
             headers: {
                 "Content-Type": "application/json"
             },
             contentType: "application/json",
-            method: "GET",
-            data: {name:person.name}
+            method: "POST",
+            data: JSON.stringify(person),
         }).done(function (data, textStatus, jqXHR) {
-            console.log('success ' + JSON.stringify(data));
-            console.log("cookie : "+data.id);
-            document.cookie=data.id;
-            if(data.password == person.password){
-                window.location.href="../html/login.html";
-            }else{
-                window.location.href="../html/incorrectPassword.html";
-            }
+           if (data == "") window.location.href="../html/incorrectEmail.html";
+           else window.location.href="../html/whatson.html";
         }).fail(function (response) {
             console.log("error");
             console.log(response);
@@ -31,11 +26,8 @@ window.CinemaApplication = {
     bindEvents: function() {
         $( ".loginbox" ).submit(function() {
             const person = {
-                firstName: $('input[name=firstName]').val(),
-                lastName: $('input[name=lastName]').val(),
-                password: $('input[name=password]').val(),
-                telephoneNumber: $('input[name=telephoneNumber]').val(),
                 email: $('input[name=email]').val(),
+                password: $('input[name=password]').val(),
             };
             CinemaApplication.load(person);
             return false;
