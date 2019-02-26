@@ -5,11 +5,39 @@
     <title>Seat Selection</title>
 
     <link rel="stylesheet" type="text/css" href="../css/selectSeat.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
 
 
 </head>
 <body>
+
+<div class="reserve">
+<!-- Styling SelectBox Using Background Image Technique  -->
+<div class="imgBgMethod">
+    <select id="movieOption">
+        <option>&lt;&nbsp;Select Movie&nbsp;&gt;</option>
+        <!--<option value="burger">Burger</option>-->
+
+    </select>
+</div>
+
+<!-- Styling SelectBox Using CSS  -->
+<div class="imgBgMethod">
+    <select id = "hallOption">
+        <option>&lt;&nbsp;Select Hall&nbsp;&gt;</option>
+
+    </select>
+</div>
+
+<!-- FontAwesome Glyph Icon Technique  -->
+<div class="imgBgMethod">
+    <select id="scheduleOption">
+        <option>&lt;&nbsp;Select Schedule&nbsp;&gt;</option>
+
+    </select>
+</div>
+</div>
+
 
 <div class="screen">
     <img src="../img/screen.png">
@@ -85,13 +113,19 @@
             <div class="seat">8</div>
 
         </div>
-
     </div>
-
 </div>
 
+
 <footer>
+
+    <script src="../js/lib/jquery/jquery-2.1.3.js"></script>
+
     <script src="../js/lib/selectSeat.js"></script>
 </footer>
+
+<div class="submit">
+    <input type="submit" value="Reserve Now">
+</div>
 </body>
 </html>
