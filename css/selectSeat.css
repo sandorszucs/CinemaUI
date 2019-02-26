@@ -5,7 +5,18 @@ body {
 
 .screen {
     text-align: center;
-   margin-top: 25%;
+   margin-top: 15%;
+  position: relative;
+}
+
+.reserve {
+    text-align: center;
+    position: relative;
+}
+
+.submit {
+    text-align: center;
+    margin-top: 20%;
 }
 
 .theatre {
@@ -16,6 +27,7 @@ body {
   transform: translate(-50%, -50%);
 }
 .cinema-seats {
+  position: relative;
   display: flex;
 }
 .cinema-seats .seat {
@@ -142,3 +154,69 @@ body {
 .right .row-7 .seat {
   transform: skew(-20deg);
 }
+
+/*http://i68.tinypic.com/9t3d3d.png  */
+body{
+  font-family: "helvetica";
+  font-size: 100%;
+}
+
+select{
+  border:1px solid #777;
+  padding: .8rem 3rem .8rem .5rem;
+  border-radius: 3px;
+
+  color:#565656;
+
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  cursor: pointer;
+
+
+}
+
+.imgBgMethod, .borderMethod,.glyphIconMethod{
+  display: inline-block;
+  position: relative;
+}
+
+.imgBgMethod select{
+  background: #fff url("http://i68.tinypic.com/9t3d3d.png ") no-repeat 95% 50%;
+}
+
+.borderMethod select, .glyphIconMethod select{background: transparent;}
+
+.borderMethod::after{
+  content: "";
+  display: inline-block;
+  border-top: 10px solid #777;
+  border-right:10px solid transparent;
+  border-left:10px solid transparent;
+  position: absolute;
+  top:calc(50% - 5px);
+  right:.5rem;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.glyphIconMethod::after{
+  content: " \f13a";
+  font-family: "FontAwesome";
+  color: #777;
+  position: absolute;
+  right:.5rem;
+  top:15px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+select:focus{
+  border: 1px solid blue;
+}
+
+select::-ms-expand{
+  display: none;
+}
+
