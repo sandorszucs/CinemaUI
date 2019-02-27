@@ -5,170 +5,123 @@ var API_URL = {
     CREATE_RESERVATION: 'http://localhost:8010/reservation',
     READ: 'http://localhost:8010/schedule' //readuri pt toate scheduleurile
 };
+var movieId;
+var hallId;
 
+var schedulesGlobal = []; // variabila globala in care tinem toate scheduleruri - Nu e eficient - normal daca am avea api mai granular ar fi mai eficient si performant
+// ar putea fi imbunatit cu api - getAllAvailableMovies, getHallsForMovie(movieId), getScheduleForMovieInHall(movieId,hallId)
+//deocamdnata e ok asa - dar poate ramane asta de imbunatatit dupa acreditare :)
 window.CinemaReservation = {
+
+    buildScheduleDateOption: function (scheduleToAdd) {
+        return `<option value='${scheduleToAdd.id}'> ${scheduleToAdd.movieStartTime} </option>`;
+
+    },
+
+    //am extras functie care returneaza stringul creat pt un option
+    buildMovieOption: function (scheduleFromIndex) {
+        //pe langa movie title mai adaug si movie id ca si fied data-id = nu va fi visibil la client,
+        // dar il vei putea folosi cand faci rezervarea sa iei movie id selectat de user
+        return `<option value='${scheduleFromIndex.movieInfo.id}'> ${scheduleFromIndex.movieInfo.title} </option>`;
+    },
+
+    buildHallOption: function (scheduleFromIndex) {
+        //pe langa movie title mai adaug si hall id ca si fied data-id = nu va fi visibil la client,
+        // dar il vei putea folosi cand faci rezervarea sa iei hall id selectat de user
+        return `<option value='${scheduleFromIndex.hall.id}'> ${scheduleFromIndex.hall.location} </option>`;
+
+    },
 
     load: function () {
         $.ajax({
             url: API_URL.READ,
             method: "GET"
         }).done(function (schedules) {
-            console.info('done: schedules', schedules);
-
+            schedulesGlobal = schedules;
 
             var hallOption = $("#hallOption");
             var movieOption = $("#movieOption");
-            var scheduleOption = $("#scheduleOption");
             var movieList = [];
-            var hallList =[];
+            var hallList = [];
             for (i = 0; i < schedules.length; i++) {
-                console.info(schedules[i].movieInfo.title);
-                console.info(schedules[i].hall.location);
-                console.info(schedules[i].movieStartTime);
-
-                var alreadyExists = movieList.indexOf(schedules[i].movieInfo.title);
+                let scheduleFromIndex = schedules[i];//extracted as variable - ca sa o mai pot folosi mai usor
+                var alreadyExists = movieList.indexOf(scheduleFromIndex.movieInfo.title);
                 if (alreadyExists < 0) {
-                    movieOption.html(movieOption.html() + "<option>" + schedules[i].movieInfo.title + "</option>")
+                    movieOption.html(movieOption.html() + CinemaReservation.buildMovieOption(scheduleFromIndex))
                 }
-                movieList.push(schedules[i].movieInfo.title);
+                movieList.push(scheduleFromIndex.movieInfo.title);
 
                 // hall
-                var hallAlreadyExists = hallList.indexOf(schedules[i].hall.location);
+                var hallAlreadyExists = hallList.indexOf(scheduleFromIndex.hall.location);
                 if (hallAlreadyExists < 0) {
-                    hallOption.html(hallOption.html() + "<option>" + schedules[i].hall.location + "</option>")
+                    hallOption.html(hallOption.html() + CinemaReservation.buildHallOption(scheduleFromIndex))
                 }
-                hallList.push(schedules[i].hall.location);
+                hallList.push(scheduleFromIndex.hall.location);
 
-                scheduleOption.html(scheduleOption.html() + "<option>" + schedules[i].movieStartTime + "</option>")
+                //  scheduleOption.html(scheduleOption.html() + "<option>" + scheduleFromIndex.movieStartTime + "</option>")
+                CinemaReservation.bindEventsForOptions();
             }
 
         });
     },
-    //chemam pt fiecare moment cand se schimba hall-ul / movie
-    bindScheduleOption: function (schedule) {
 
-    },
-
-    getActionRow: function () {
-        // ES5 string concatenation
-        return '<tr>' +
-            '<td><input type="text" required name="firstName" placeholder="Enter first name"></td>' +
-            '<td><input type="text" name="lastName" placeholder="Enter last name"></td>' +
-            '<td><input type="text" required name="phone" placeholder="Enter phone"></td>' +
-            '<td><button type="submit">Save</button></td>' +
-            '</tr>';
-    },
-
-    delete: function (id) {
-        $.ajax({
-            url: API_URL.DELETE,
-            method: "POST",
-            data: {
-                id: id
-            }
-        }).done(function (response) {
-            if (response.success) {
-                PhoneBook.load();
-            }
-        });
-    },
-
-    add: function (person) {
-        console.log(person);
-        $.ajax({
-            url: API_URL.CREATE,
-            headers: {
-
-                "Content-Type": "application/json"
-            },
-            method: "POST",
-            data: JSON.stringify(person, null, 2)
-        }).done(function (response) {
-            if (response.success) {
-                PhoneBook.load();
-            }
-        });
-    },
-
-    save: function (person) {
-        console.log(person);
-        $.ajax({
-            url: API_URL.UPDATE + person.id,
-            method: "PUT",
-            headers: {
-
-                "Content-Type": "application/json"
-            },
-            data: JSON.stringify(person, null, 2)
-        }).done(function (response) {
-            if (response.success) {
-                editId = '';
-                PhoneBook.load();
-            }
-        });
-    },
-
-    bindEvents: function () {
-        $('#phone-book tbody').delegate('a.edit', 'click', function () {
-            var id = $(this).data('id');
-            PhoneBook.edit(id);
-        });
-
-        $('#phone-book tbody').delegate('a.delete', 'click', function () {
-            var id = $(this).data('id');
-            console.info('click on ', this, id);
-            PhoneBook.delete(id);
-        });
-
-        $(".add-form").submit(function () {
-            const person = {
-                firstName: $('input[name=firstName]').val(),
-                lastName: $('input[name=lastName]').val(),
-                phone: $('input[name=phone]').val()
-            };
-
-            if (editId) {
-                person.id = editId;
-                PhoneBook.save(person);
-            } else {
-                PhoneBook.add(person);
-            }
-        });
-    },
-
-    edit: function (id) {
-        // ES5 function systax inside find
-        var editPerson = persons.find(function (person) {
-            console.log(person.firstName);
-            return person.id == id;
-        });
-        console.warn('edit', editPerson);
-
-        if (editId) {
-            const cancelBtn = `<button onclick="PhoneBook.cancelEdit(this)">Cancel</button>`;
-            $('#phone-book tbody tr:last-child() td:last-child()').append(cancelBtn);
+    getScheduleForMovieInHall: function (schedule) {
+        if (schedule.movieInfo.id === movieId && ((hallId > 0 && hallId === schedule.hall.id) || !hallId === "-1")) {
+            return true;
+        } else {
+            return false;
         }
-
-        $('input[name=firstName]').val(editPerson.firstName);
-        $('input[name=lastName]').val(editPerson.lastName);
-        $('input[name=phone]').val(editPerson.phone);
-        editId = id;
     },
 
-    cancelEdit: function (button) {
-        $(".add-form").get(0).reset();
-        editId = '';
-        button.parentNode.removeChild(button);
-    },
+    bindEventsForOptions: function () {
+        var hallOption = $("#hallOption");
+        var movieOption = $("#movieOption");
 
-    display: function (persons) {
-        window.persons = persons;
-        var rows = '';
+        movieOption.change(function () {
+            movieId = parseInt(movieOption.val());
+            hallId = parseInt(hallOption.val());
+            console.log("movieId " + movieId);
+            console.log("hallId " + hallId);
 
-        // ES6 function systax inside forEach
-        persons.forEach(person => rows += PhoneBook.getRow(person));
-        rows += PhoneBook.getActionRow();
-        $('#phone-book tbody').html(rows);
+            var schedulesForMovieAndHall = []
+            for (i = 0; i < schedulesGlobal.length; i++) {
+                scheduleForFor = schedulesGlobal[i];
+                if (scheduleForFor.movieInfo.id === movieId && ((hallId >= 0 && hallId === scheduleForFor.hall.id) || !hallId === -1)) {
+                    schedulesForMovieAndHall.push(scheduleForFor);
+                    console.log("scheule found" + scheduleForFor)
+                }
+            }
+            var scheduleOption = $("#scheduleOption");
+            scheduleOption.html("<option  value='-1'>Select Schedule</option>");
+            for (i = 0; i < schedulesForMovieAndHall.length; i++) {
+                scheduleToAdd = schedulesForMovieAndHall[i];
+                scheduleOption.html(scheduleOption.html() + CinemaReservation.buildScheduleDateOption(scheduleToAdd));
+            }
+        });
+
+        hallOption.change(function () {
+            console.log("changeHall");
+            movieId = parseInt(movieOption.val());
+            hallId = parseInt(hallOption.val());
+
+            console.log("movieId " + movieId);
+            console.log("hallId " + hallId);
+
+            var  schedulesForMovieAndHall = []
+            for (i = 0; i < schedulesGlobal.length; i++) {
+                scheduleForFor = schedulesGlobal[i];
+                if (scheduleForFor.movieInfo.id === movieId && ((hallId >= 0 && hallId === scheduleForFor.hall.id) || !hallId === -1)) {
+                    schedulesForMovieAndHall.push(scheduleForFor);
+                    console.log("scheule found" + scheduleForFor)
+                }
+            }
+            var scheduleOption = $("#scheduleOption");
+            scheduleOption.html("<option  value='-1'>Select Schedule</option>");
+            for (i = 0; i < schedulesForMovieAndHall.length; i++) {
+                scheduleToAdd = schedulesForMovieAndHall[i];
+                scheduleOption.html(scheduleOption.html() + CinemaReservation.buildScheduleDateOption(scheduleToAdd));
+            }
+        });
     }
 };
 
@@ -177,7 +130,5 @@ $('.cinema-seats .seat').on('click', function () {
 });
 
 
-var persons = [];
 console.info('loading schedule');
 CinemaReservation.load();
-// PhoneBook.bindEvents();
