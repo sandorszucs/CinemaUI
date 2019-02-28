@@ -125,18 +125,6 @@ window.CinemaReservation = {
     }
 };
 
-$('.cinema-seats .seat').on('click', function (event) {
-
-    if (event.target.className == "seat") { //ha nem aktiv a szek
-        reservations.push(event.target)
-    }
-    // else {
-    //     reservations.splice(reservations.indexOf(event.target),1)
-    // }
-    $(this).toggleClass('active');
-    console.log(reservations.length)
-});
-
 
 var price = 10; //price
 $(document).ready(function () {
