@@ -61,7 +61,11 @@ window.CinemaReservation = {
                 //  scheduleOption.html(scheduleOption.html() + "<option>" + scheduleFromIndex.movieStartTime + "</option>")
                 CinemaReservation.bindEventsForOptions();
             }
-
+            console.log(hallOption)
+            console.log(movieOption)
+            console.log(movieList)
+            console.log(hallList)
+            console.log(schedules)
         });
     },
 
@@ -182,8 +186,35 @@ $(document).ready(function () {
             }
         }
     });
+
+
+    $('#res-btn').click(function(){
+       // console.log($(this));
+
+        var selectedSeats = new Array();
+        $.each($(".seatCharts-seat.seatCharts-cell.selected"), function() {
+            selectedSeats.push($(this).attr("id"));
+        });
+        console.log(selectedSeats); //vedd ki a vegen
+
+        $.ajax({
+            url: API_URL.READ,//ide fogod kuldeni az adatokat, pl  'http://localhost:8010/reservation',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "POST", //GET vagy POST
+            data: JSON.stringify(selectedSeats, null, 1)
+
+            // data: { selectedSeats : selectedSeats }
+
+        }).success(function() {
+            $("<p>Reservation created</p>").insertAfter('#res-btn');
+            //ide felhozod a foglaltakat (sc.get...)
+            // console.log('Data inserted!');
+        });
+    });
     //sold seat
-    // sc.get(['1_2', '4_4', '4_5', '6_6', '6_7', '8_5', '8_6', '8_7', '8_8', '10_1', '10_2']).status('unavailable');
+    sc.get(['']).status('unavailable'); //nu aici ar trebuii sa punem toate scaunele rezervate?
 
 });
 
