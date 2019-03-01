@@ -92,7 +92,7 @@ window.CinemaReservation = {
                 scheduleForFor = schedulesGlobal[i];
                 if (scheduleForFor.movieInfo.id === movieId && ((hallId >= 0 && hallId === scheduleForFor.hall.id) || !hallId === -1)) {
                     schedulesForMovieAndHall.push(scheduleForFor);
-                    console.log("scheule found" + scheduleForFor)
+                    console.log("schedule found" + scheduleForFor)
                 }
             }
             var scheduleOption = $("#scheduleOption");
@@ -197,13 +197,23 @@ $(document).ready(function () {
         });
         console.log(selectedSeats); //vedd ki a vegen
 
+        var scheduleOption = $("#scheduleOption");
+        var scheduleId = parseInt(scheduleOption.val());
+
+        var postBodyToSaveReservation = {
+            "scheduleId": scheduleId,
+            "reservedSeat": selectedSeats,
+            "userId": 1
+        }
+        console.log("to post " + postBodyToSaveReservation);
+
         $.ajax({
-            url: API_URL.READ,//ide fogod kuldeni az adatokat, pl  'http://localhost:8010/reservation',
+            url: API_URL.CREATE_RESERVATION,//ide fogod kuldeni az adatokat, pl  'http://localhost:8010/reservation',
             headers: {
                 "Content-Type": "application/json"
             },
             method: "POST", //GET vagy POST
-            data: JSON.stringify(selectedSeats, null, 1)
+            data: JSON.stringify(postBodyToSaveReservation)
 
             // data: { selectedSeats : selectedSeats }
 
