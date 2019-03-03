@@ -8,26 +8,18 @@ var API_URL = {
 var movieId;
 var hallId;
 var reservations = [];
-var schedulesGlobal = []; // variabila globala in care tinem toate scheduleruri - Nu e eficient - normal daca am avea api mai granular ar fi mai eficient si performant
-// ar putea fi imbunatit cu api - getAllAvailableMovies, getHallsForMovie(movieId), getScheduleForMovieInHall(movieId,hallId)
-//deocamdnata e ok asa - dar poate ramane asta de imbunatatit dupa acreditare :)
+var schedulesGlobal = [];
 window.CinemaReservation = {
 
     buildScheduleDateOption: function (scheduleToAdd) {
         return `<option value='${scheduleToAdd.id}'> ${scheduleToAdd.movieStartTime} </option>`;
-
     },
 
-    //am extras functie care returneaza stringul creat pt un option
     buildMovieOption: function (scheduleFromIndex) {
-        //pe langa movie title mai adaug si movie id ca si fied data-id = nu va fi visibil la client,
-        // dar il vei putea folosi cand faci rezervarea sa iei movie id selectat de user
         return `<option value='${scheduleFromIndex.movieInfo.id}'> ${scheduleFromIndex.movieInfo.title} </option>`;
     },
 
     buildHallOption: function (scheduleFromIndex) {
-        //pe langa movie title mai adaug si hall id ca si fied data-id = nu va fi visibil la client,
-        // dar il vei putea folosi cand faci rezervarea sa iei hall id selectat de user
         return `<option value='${scheduleFromIndex.hall.id}'> ${scheduleFromIndex.hall.location} </option>`;
 
     },
@@ -69,8 +61,6 @@ window.CinemaReservation = {
                     hallOption.html(hallOption.html() + CinemaReservation.buildHallOption(scheduleFromIndex))
                 }
                 hallList.push(scheduleFromIndex.hall.location);
-
-                //  scheduleOption.html(scheduleOption.html() + "<option>" + scheduleFromIndex.movieStartTime + "</option>")
             }
             CinemaReservation.bindEventsForOptions();
 
@@ -141,7 +131,7 @@ window.CinemaReservation = {
                 scheduleOption.html(scheduleOption.html() + CinemaReservation.buildScheduleDateOption(scheduleToAdd));
 
             }
-            scheduleOption.change(function(){
+            scheduleOption.change(function () {
                 console.log("change schedule");
                 clearSeats();
                 loadSeats();
@@ -214,20 +204,18 @@ function displaySeats() {
             }
         }
     });
-    sc.get(['']).status('unavailable'); //nu aici ar trebuii sa punem toate scaunele rezervate?
+    // sc.get(['']).status('unavailable');
 
 }
 
 $(document).ready(function () {
     $('#res-btn').click(function () {
-        // console.log($(this));
 
         var selectedSeats = new Array();
         $.each($(".seatCharts-seat.seatCharts-cell.selected"), function () {
             selectedSeats.push($(this).attr("id"));
         });
-        console.log(selectedSeats); //vedd ki a vegen
-
+        console.log(selectedSeats);
 
         var scheduleOption = $("#scheduleOption");
         var scheduleId = parseInt(scheduleOption.val());
@@ -240,28 +228,22 @@ $(document).ready(function () {
         console.log("to post " + postBodyToSaveReservation);
 
         $.ajax({
-            url: API_URL.CREATE_RESERVATION,//ide fogod kuldeni az adatokat, pl  'http://localhost:8010/reservation',
+            url: API_URL.CREATE_RESERVATION,
             headers: {
                 "Content-Type": "application/json"
             },
-            method: "POST", //GET vagy POST
+            method: "POST",
             data: JSON.stringify(postBodyToSaveReservation)
-
-            // data: { selectedSeats : selectedSeats }
 
         }).success(function () {
             $("<p>Reservation created</p>").insertAfter('#res-btn');
-            //ide felhozod a foglaltakat (sc.get...)
-            // console.log('Data inserted!');
             CinemaReservation.refreshScheduled();
-            clearSeats()
+            clearSeats();
             loadSeats();
             displaySeats();
 
         });
     });
-    //sold seat
-
 });
 
 //sum total money
@@ -286,7 +268,7 @@ function clearLegend() {
 
 
 function loadSeats() {
-    var t=jQuery;
+    var t = jQuery;
     t.fn.seatCharts = function (s) {
         if (this.data("seatCharts")) return this.data("seatCharts");
         var e = this, a = {}, n = [], i = {
@@ -311,7 +293,7 @@ function loadSeats() {
             return function (n) {
 
                 var i = this;
-                var status = computeStatusForSeat(i,n);
+                var status = computeStatusForSeat(i, n);
                 i.settings = t.extend({
                     status: status,
                     style: status,
@@ -322,7 +304,8 @@ function loadSeats() {
                     "aria-checked": !1,
                     focusable: !0,
                     tabIndex: -1
-                }).text(i.settings.label).addClass(["seatCharts-seat", "seatCharts-cell", status].concat(i.settings.classes, "undefined" == typeof e.seats[i.settings.character] ? [] : e.seats[i.settings.character].classes).join(" ")), i.data = function () {
+                }).text(i.settings.label).addClass(["seatCharts-seat", "seatCharts-cell", status].concat(i.settings.classes,
+                    "undefined" == typeof e.seats[i.settings.character] ? [] : e.seats[i.settings.character].classes).join(" ")), i.data = function () {
                     return i.settings.data
                 }, i["char"] = function () {
                     return i.settings.character
@@ -336,7 +319,7 @@ function loadSeats() {
                             e.animate ? i.settings.$node.switchClass(s, t, 200) : i.settings.$node.addClass(t), i.settings.style = t)
                     }(arguments[0]) : i.settings.style
                 }, i.status = function () {
-                    computeStatusForSeat(i,n);
+                    computeStatusForSeat(i, n);
                 }, function (n, r, c) {
                     t.each(["click", "focus", "blur"], function (t, u) {
                         i[u] = function () {
@@ -358,14 +341,19 @@ function loadSeats() {
                             case 38:
                                 if (n.preventDefault(), i = function r(t, s, a) {
                                     var c;
-                                    return c = t.index(a) || 38 != n.which ? t.index(a) == t.length - 1 && 40 == n.which ? t.first() : t.eq(t.index(a) + (38 == n.which ? -1 : 1)) : t.last(), i = c.find(".seatCharts-seat,.seatCharts-space").eq(s.index(e)), i.hasClass("seatCharts-space") ? r(t, s, c) : i
-                                }(e.parents(".seatCharts-container").find(".seatCharts-row:not(.seatCharts-header)"), e.parents(".seatCharts-row:first").find(".seatCharts-seat,.seatCharts-space"), e.parents(".seatCharts-row:not(.seatCharts-header)")), !i.length) return;
+                                    return c = t.index(a) || 38 != n.which ? t.index(a) == t.length - 1 && 40 == n.which ? t.first() : t.eq(t.index(a) +
+                                        (38 == n.which ? -1 : 1)) : t.last(), i = c.find(".seatCharts-seat,.seatCharts-space").eq(s.index(e)),
+                                        i.hasClass("seatCharts-space") ? r(t, s, c) : i
+                                }(e.parents(".seatCharts-container").find(".seatCharts-row:not(.seatCharts-header)"),
+                                    e.parents(".seatCharts-row:first").find(".seatCharts-seat,.seatCharts-space"),
+                                    e.parents(".seatCharts-row:not(.seatCharts-header)")), !i.length) return;
                                 t.blur(), a[i.attr("id")].focus(), i.focus(), s.attr("aria-activedescendant", i.attr("id"));
                                 break;
                             case 37:
                             case 39:
                                 if (n.preventDefault(), i = function (t) {
-                                    return t.index(e) || 37 != n.which ? t.index(e) == t.length - 1 && 39 == n.which ? t.first() : t.eq(t.index(e) + (37 == n.which ? -1 : 1)) : t.last()
+                                    return t.index(e) || 37 != n.which ? t.index(e) == t.length - 1 && 39 == n.which ? t.first() : t.eq(t.index(e)
+                                        + (37 == n.which ? -1 : 1)) : t.last()
                                 }(e.parents(".seatCharts-container:first").find(".seatCharts-seat:not(.seatCharts-space)")), !i.length) return;
                                 t.blur(), a[i.attr("id")].focus(), i.focus(), s.attr("aria-activedescendant", i.attr("id"))
                         }
@@ -387,7 +375,8 @@ function loadSeats() {
         }
         return e.append(c), t.each(i.map, function (s, c) {
             var u = t("<div></div>").addClass("seatCharts-row");
-            i.naming.left && u.append(t("<div></div>").addClass("seatCharts-cell seatCharts-space").text(i.naming.rows[s])), t.each(c.match(/[a-z_]{1}(\[[0-9a-z_]{0,}(,[0-9a-z_ ]+)?\])?/gi), function (e, c) {
+            i.naming.left && u.append(t("<div></div>").addClass("seatCharts-cell seatCharts-space").text(i.naming.rows[s])),
+                t.each(c.match(/[a-z_]{1}(\[[0-9a-z_]{0,}(,[0-9a-z_ ]+)?\])?/gi), function (e, c) {
                 var h = c.match(/([a-z_]{1})(\[([0-9a-z_ ,]+)\])?/i), d = h[1],
                     o = "undefined" != typeof h[3] ? h[3].split(",") : [], l = o.length ? o[0] : null,
                     f = 2 === o.length ? o[1] : null;
@@ -409,7 +398,9 @@ function loadSeats() {
             var a = (s.node || t("<div></div>").insertAfter(e)).addClass("seatCharts-legend"),
                 n = t("<ul></ul>").addClass("seatCharts-legendList").appendTo(a);
             return t.each(s.items, function (s, e) {
-                n.append(t("<li></li>").addClass("seatCharts-legendItem").append(t("<div></div>").addClass(["seatCharts-seat", "seatCharts-cell", e[1]].concat(i.classes, "undefined" == typeof i.seats[e[0]] ? [] : i.seats[e[0]].classes).join(" "))).append(t("<span></span>").addClass("seatCharts-legendDescription").text(e[2])))
+                n.append(t("<li></li>").addClass("seatCharts-legendItem").append(t("<div></div>").addClass(["seatCharts-seat",
+                    "seatCharts-cell", e[1]].concat(i.classes, "undefined" == typeof i.seats[e[0]] ? []
+                    : i.seats[e[0]].classes).join(" "))).append(t("<span></span>").addClass("seatCharts-legendDescription").text(e[2])))
             }), a
         }(i.legend) : null, e.attr({tabIndex: 0}), e.focus(function () {
             e.attr("aria-activedescendant") && a[e.attr("aria-activedescendant")].blur(), e.find(".seatCharts-seat:not(.seatCharts-space):first").focus(), a[n[0]].focus()
@@ -487,18 +478,20 @@ function loadSeats() {
             }
         }), e.data("seatCharts")
     }
-}(jQuery);
+}
 
-function computeStatusForSeat(i,seat) {
+(jQuery);
+
+function computeStatusForSeat(i, seat) {
     //get selected schedule
     var scheduleOption = $("#scheduleOption");
     var scheduleId = parseInt(scheduleOption.val());
     if (scheduleId < 0) {
         return "unavailable";
     }
-    i.statusValue =[];
+    i.statusValue = [];
     var selectedSchedule = schedulesGlobal.filter(schedule => schedule.id === scheduleId)[0];
-    var isReservered = selectedSchedule.reservedSeats.filter(reservedSeat => (reservedSeat.seat.row + "_" + reservedSeat.seat.seatNumber)===seat.id).length > 0;
+    var isReservered = selectedSchedule.reservedSeats.filter(reservedSeat => (reservedSeat.seat.row + "_" + reservedSeat.seat.seatNumber) === seat.id).length > 0;
     if (!isReservered) {
         i.statusValue[0] = "available";
         return "available";
@@ -507,5 +500,6 @@ function computeStatusForSeat(i,seat) {
         return "unavailable";
     }
 }
+
 console.info('loading schedule');
 CinemaReservation.load();

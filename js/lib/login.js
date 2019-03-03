@@ -14,17 +14,17 @@ window.CinemaApplication = {
             method: "POST",
             data: JSON.stringify(person),
         }).done(function (data, textStatus, jqXHR) {
-           if (data == "") window.location.href="../html/incorrectEmail.html";
-           else window.location.href="../html/whatson.html";
+            if (data == "") window.location.href = "../html/incorrectEmail.html";
+            else window.location.href = "../html/whatson.html";
         }).fail(function (response) {
             console.log("error");
             console.log(response);
-            window.location.href="../html/incorrectEmail.html";
+            window.location.href = "../html/incorrectEmail.html";
         });
     },
 
-    bindEvents: function() {
-        $( ".loginbox" ).submit(function() {
+    bindEvents: function () {
+        $(".loginbox").submit(function () {
             const person = {
                 email: $('input[name=email]').val(),
                 password: $('input[name=password]').val(),
