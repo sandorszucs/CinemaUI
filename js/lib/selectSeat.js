@@ -32,6 +32,18 @@ window.CinemaReservation = {
 
     },
 
+    refreshScheduled: function () {
+        $.ajax({
+            url: API_URL.READ,
+            method: "GET"
+        }).done(function (schedules) {
+            schedulesGlobal = schedules;
+            clearSeats()
+            loadSeats();
+            displaySeats();
+        })
+    },
+
     load: function () {
         $.ajax({
             url: API_URL.READ,
@@ -59,8 +71,9 @@ window.CinemaReservation = {
                 hallList.push(scheduleFromIndex.hall.location);
 
                 //  scheduleOption.html(scheduleOption.html() + "<option>" + scheduleFromIndex.movieStartTime + "</option>")
-                CinemaReservation.bindEventsForOptions();
             }
+            CinemaReservation.bindEventsForOptions();
+
             console.log(hallOption)
             console.log(movieOption)
             console.log(movieList)
@@ -82,11 +95,13 @@ window.CinemaReservation = {
         var movieOption = $("#movieOption");
 
         movieOption.change(function () {
+            console.log("change movie");
+
             movieId = parseInt(movieOption.val());
             hallId = parseInt(hallOption.val());
             console.log("movieId " + movieId);
             console.log("hallId " + hallId);
-
+            $("div.seatCharts-row");
             var schedulesForMovieAndHall = []
             for (i = 0; i < schedulesGlobal.length; i++) {
                 scheduleForFor = schedulesGlobal[i];
@@ -124,14 +139,21 @@ window.CinemaReservation = {
             for (i = 0; i < schedulesForMovieAndHall.length; i++) {
                 scheduleToAdd = schedulesForMovieAndHall[i];
                 scheduleOption.html(scheduleOption.html() + CinemaReservation.buildScheduleDateOption(scheduleToAdd));
+
             }
+            scheduleOption.change(function(){
+                console.log("change schedule");
+                clearSeats();
+                loadSeats();
+                displaySeats();
+            })
         });
     }
 };
 
 
 var price = 10; //price
-$(document).ready(function () {
+function displaySeats() {
     var $cart = $('#selected-seats'), //Sitting Area
         $counter = $('#counter'), //Votes
         $total = $('#total'); //Total money
@@ -159,43 +181,53 @@ $(document).ready(function () {
             ]
         },
         click: function () { //Click event
-            if (this.status() == 'available') { //optional seat
+            console.log("click");
+            var isSelected = $("div#" + this.settings.id + ".selected").length > 0;
+            if (this.statusValue[0] == 'available' && !isSelected) { //optional seat
+                $("div#" + this.settings.id).addClass("selected");
                 $('<li>R' + (this.settings.row + 1) + ' S' + this.settings.label + '</li>')
                     .attr('id', 'cart-item-' + this.settings.id)
                     .data('seatId', this.settings.id)
                     .appendTo($cart);
-
-                $counter.text(sc.find('selected').length + 1);
-                $total.text(recalculateTotal(sc) + price);
-
+                var selectedCount = $("div#seat-map div.selected").length;
+                $counter.text(selectedCount);
+                $total.text(selectedCount * price);
+                this.statusValue[1] = "selected";
                 return 'selected';
-            } else if (this.status() == 'selected') { //Checked
+            } else if (this.statusValue[0] == 'available' && isSelected) { //Checked
                 //Update Number
-                $counter.text(sc.find('selected').length - 1);
-                //update totalnum
-                $total.text(recalculateTotal(sc) - price);
+                $("div#" + this.settings.id).removeClass("selected");
+
+                var selectedCount = $("div#seat-map div.selected").length;
+                $counter.text(selectedCount);
+                $total.text(selectedCount * price);
 
                 //Delete reservation
                 $('#cart-item-' + this.settings.id).remove();
                 //optional
+                this.statusValue[1] = null;
                 return 'available';
-            } else if (this.status() == 'unavailable') { //sold
+            } else if (this.statusValue[0] == 'unavailable') { //sold
                 return 'unavailable';
             } else {
                 return this.style();
             }
         }
     });
+    sc.get(['']).status('unavailable'); //nu aici ar trebuii sa punem toate scaunele rezervate?
 
+}
 
-    $('#res-btn').click(function(){
-       // console.log($(this));
+$(document).ready(function () {
+    $('#res-btn').click(function () {
+        // console.log($(this));
 
         var selectedSeats = new Array();
-        $.each($(".seatCharts-seat.seatCharts-cell.selected"), function() {
+        $.each($(".seatCharts-seat.seatCharts-cell.selected"), function () {
             selectedSeats.push($(this).attr("id"));
         });
         console.log(selectedSeats); //vedd ki a vegen
+
 
         var scheduleOption = $("#scheduleOption");
         var scheduleId = parseInt(scheduleOption.val());
@@ -217,14 +249,18 @@ $(document).ready(function () {
 
             // data: { selectedSeats : selectedSeats }
 
-        }).success(function() {
+        }).success(function () {
             $("<p>Reservation created</p>").insertAfter('#res-btn');
             //ide felhozod a foglaltakat (sc.get...)
             // console.log('Data inserted!');
+            CinemaReservation.refreshScheduled();
+            clearSeats()
+            loadSeats();
+            displaySeats();
+
         });
     });
     //sold seat
-    sc.get(['']).status('unavailable'); //nu aici ar trebuii sa punem toate scaunele rezervate?
 
 });
 
@@ -239,7 +275,18 @@ function recalculateTotal(sc) {
 }
 
 
-!function (t) {
+function clearSeats() {
+    $("div#seat-map .seatCharts-row").remove();
+    $("div#seat-map").removeData("seatCharts");
+}
+
+function clearLegend() {
+    $("div#legend .seatCharts-legendList").remove();
+}
+
+
+function loadSeats() {
+    var t=jQuery;
     t.fn.seatCharts = function (s) {
         if (this.data("seatCharts")) return this.data("seatCharts");
         var e = this, a = {}, n = [], i = {
@@ -251,17 +298,23 @@ function recalculateTotal(sc) {
                 }
             }, legend: {node: null, items: []}, click: function () {
                 return "available" == this.status() ? "selected" : "selected" == this.status() ? "available" : this.style()
-            }, focus: function () {
+            }
+            ,
+            focus: function () {
                 return "available" == this.status() ? "focused" : this.style()
             }, blur: function () {
                 return this.status()
-            }, seats: {}
+            },
+            seats: {}
         }, r = function (s, e) {
+            var objectWIthStatus = this;
             return function (n) {
+
                 var i = this;
+                var status = computeStatusForSeat(i,n);
                 i.settings = t.extend({
-                    status: "available",
-                    style: "available",
+                    status: status,
+                    style: status,
                     data: e.seats[n.character] || {}
                 }, n), i.settings.$node = t("<div></div>"), i.settings.$node.attr({
                     id: i.settings.id,
@@ -269,7 +322,7 @@ function recalculateTotal(sc) {
                     "aria-checked": !1,
                     focusable: !0,
                     tabIndex: -1
-                }).text(i.settings.label).addClass(["seatCharts-seat", "seatCharts-cell", "available"].concat(i.settings.classes, "undefined" == typeof e.seats[i.settings.character] ? [] : e.seats[i.settings.character].classes).join(" ")), i.data = function () {
+                }).text(i.settings.label).addClass(["seatCharts-seat", "seatCharts-cell", status].concat(i.settings.classes, "undefined" == typeof e.seats[i.settings.character] ? [] : e.seats[i.settings.character].classes).join(" ")), i.data = function () {
                     return i.settings.data
                 }, i["char"] = function () {
                     return i.settings.character
@@ -278,14 +331,20 @@ function recalculateTotal(sc) {
                 }, i.style = function () {
                     return 1 == arguments.length ? function (t) {
                         var s = i.settings.style;
-                        return t == s ? s : (i.settings.status = "focused" != t ? t : i.settings.status, i.settings.$node.attr("aria-checked", "selected" == t), e.animate ? i.settings.$node.switchClass(s, t, 200) : i.settings.$node.removeClass(s).addClass(t), i.settings.style = t)
+                        return t == s ? s : (i.settings.status = "focused" != t ?
+                            t : i.settings.status, i.settings.$node.attr("aria-checked", "selected" == t),
+                            e.animate ? i.settings.$node.switchClass(s, t, 200) : i.settings.$node.addClass(t), i.settings.style = t)
                     }(arguments[0]) : i.settings.style
                 }, i.status = function () {
-                    return i.settings.status = 1 == arguments.length ? i.style(arguments[0]) : i.settings.status
+                    computeStatusForSeat(i,n);
                 }, function (n, r, c) {
                     t.each(["click", "focus", "blur"], function (t, u) {
                         i[u] = function () {
-                            return "focus" == u && (void 0 !== s.attr("aria-activedescendant") && a[s.attr("aria-activedescendant")].blur(), s.attr("aria-activedescendant", c.settings.id), c.node().focus()), i.style("function" == typeof n[r][u] ? n[r][u].apply(c) : e[u].apply(c))
+                            return "focus" == u && (void 0 !== s.attr("aria-activedescendant") &&
+                            a[s.attr("aria-activedescendant")].blur(), s.attr("aria-activedescendant", c.settings.id),
+                                c.node().focus()),
+
+                                i.style("function" == typeof n[r][u] ? n[r][u].apply(c) : e[u].apply(c))
                         }
                     })
                 }(e.seats, i.settings.character, i), i.node().on("click", i.click).on("mouseenter", i.focus).on("mouseleave", i.blur).on("keydown", function (t, e) {
@@ -345,6 +404,8 @@ function recalculateTotal(sc) {
                 }(i.naming) : t("<div></div>").addClass("seatCharts-cell seatCharts-space"))
             }), e.append(u)
         }), i.legend.items.length ? function (s) {
+            if ($("div#legend .seatCharts-legendList").length > 0)
+                return;
             var a = (s.node || t("<div></div>").insertAfter(e)).addClass("seatCharts-legend"),
                 n = t("<ul></ul>").addClass("seatCharts-legendList").appendTo(a);
             return t.each(s.items, function (s, e) {
@@ -428,5 +489,23 @@ function recalculateTotal(sc) {
     }
 }(jQuery);
 
+function computeStatusForSeat(i,seat) {
+    //get selected schedule
+    var scheduleOption = $("#scheduleOption");
+    var scheduleId = parseInt(scheduleOption.val());
+    if (scheduleId < 0) {
+        return "unavailable";
+    }
+    i.statusValue =[];
+    var selectedSchedule = schedulesGlobal.filter(schedule => schedule.id === scheduleId)[0];
+    var isReservered = selectedSchedule.reservedSeats.filter(reservedSeat => (reservedSeat.seat.row + "_" + reservedSeat.seat.seatNumber)===seat.id).length > 0;
+    if (!isReservered) {
+        i.statusValue[0] = "available";
+        return "available";
+    } else {
+        i.statusValue[0] = "unavailable";
+        return "unavailable";
+    }
+}
 console.info('loading schedule');
 CinemaReservation.load();
