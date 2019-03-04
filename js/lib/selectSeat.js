@@ -236,7 +236,7 @@ $(document).ready(function () {
             data: JSON.stringify(postBodyToSaveReservation)
 
         }).success(function () {
-            $("<p>Reservation created</p>").insertAfter('#res-btn');
+            $("<p>Successfully reservated</p>").insertAfter('#res-btn');
             CinemaReservation.refreshScheduled();
             clearSeats();
             loadSeats();
