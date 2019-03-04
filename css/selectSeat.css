@@ -1,3 +1,7 @@
+body, html {
+    background: url(../img/seat.jpg) no-repeat;
+}
+
 .front {
     width: 300px;
     margin: 5px 32px 45px 32px;
@@ -150,7 +154,7 @@ span.seatCharts-legendDescription {
 .borderMethod::after{
     content: "";
     display: inline-block;
-    border-top: 10px solid #777;
+    /*border-top: 10px solid #777;*/
     border-right:10px solid transparent;
     border-left:10px solid transparent;
     position: absolute;
@@ -161,6 +165,7 @@ span.seatCharts-legendDescription {
 }
 
 .reserve {
+    margin-top: 12%;
     text-align: center;
     position: relative;
 }
@@ -189,7 +194,7 @@ select{
     color: #777;
     position: absolute;
     right:.5rem;
-    top:15px;
+    /*top:15px;*/
     z-index: -1;
     pointer-events: none;
 }
