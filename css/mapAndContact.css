@@ -6,13 +6,6 @@ body, html {
     color: #777;
 }
 
-body {
-    background: url("../img/pic8.jpg") no-repeat;
-    background-size: cover;
-    font-family: "Helvetica Neue",sans-serif;
-    font-weight: bold;
-
-}
 .content {
     width: 94%;
     margin: 4em auto;
